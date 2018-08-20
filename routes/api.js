@@ -17,7 +17,9 @@ module.exports = function (app) {
 
   app.route('/api/stock-prices')
     .get(function (req, res){
-      console.log(req.ip);
+      let stock = req.params;
+      let url = "https://api.iextrading.com/1.0/stock/"+stock+"/quote";
+      console.log(stock);
     });
     
 };
