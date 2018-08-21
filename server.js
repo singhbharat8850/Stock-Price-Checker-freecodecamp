@@ -9,6 +9,11 @@ var apiRoutes         = require('./routes/api.js');
 var fccTestingRoutes  = require('./routes/fcctesting.js');
 var runner            = require('./test-runner');
 
+
+var MongoClient = require('mongodb');
+
+const CONNECTION_STRING = process.env.DB; 
+
 var app = express();
 
 app.use('/public', express.static(process.cwd() + '/public'));
@@ -27,8 +32,17 @@ app.route('/')
 //For FCC testing purposes
 fccTestingRoutes(app);
 
-//Routing for API 
-apiRoutes(app);  
+MongoClient.connect(CONNECTION_STRING, function(err, db) {
+  if(err){
+    console.log('database error', err);
+  } else {
+    console.log('database connected');
+    //Routing for API 
+    apiRoutes(app, db); 
+    
+  }
+});
+ 
     
 //404 Not Found Middleware
 app.use(function(req, res, next) {
