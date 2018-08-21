@@ -28,13 +28,22 @@ module.exports = function (app) {
   app.route('/api/stock-prices')
     .get(function (req, res){
       let stock = req.query.stock;
-      //let like  = req.query.like || false;
+      let like  = req.query.like || false;
     
-      fetchStock(stock).then((stockData, err) => {
-        if(stockData){
-          res.json({stockData})
-        }
-      });
+      // one stock without like --- no database access needed
+      // one stock with like --- save like api to database 
+      // two stocks without like --- save like and show rel_likes
+      // two stocks with like --- no database access needed, rel_likes always 0;
+    
+      function oneStockWithoutLike(stock){
+        fetchStock(stock)
+          .then((data) =>{
+            let stockData = { stock: data.symbol, price: data.open }
+        })
+          .catch((err) => {console.log(err)})
+      }
+    
+      
     
       // Array.isArray() to check if two stocks
       // like false if no like
