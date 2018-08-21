@@ -30,8 +30,11 @@ module.exports = function (app) {
       let stock = req.query.stock;
       //let like  = req.query.like || false;
     
-      let data = 
-      res.json();
+      fetchStock(stock).then((stockData, err) => {
+        if(stockData){
+          res.json({stockData})
+        }
+      });
     
       // Array.isArray() to check if two stocks
       // like false if no like
