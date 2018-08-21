@@ -41,7 +41,18 @@ module.exports = function (app,db) {
         oneStockWithLike(stock)
       }
     
+      function likeExists(stock){
+        db.collection(req.ip).findOne({name: stock})
+        .then((data) => {
+          if(data){
+            return data;
+          }
+        })
+        .catch(err => console.log(err))
+      }
+    
       function oneStockWithoutLike(stock){
+        console.log(likeExists(stock));
         
       }
       
@@ -54,7 +65,7 @@ module.exports = function (app,db) {
       // like false if no like
       // if no like do not need to save ip
       
-      // 
+      // collection as ip name, save liked stocks
     
       // if(!like && !Array.isArray(stock)){
       //   let stockData = data('goog');
