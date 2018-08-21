@@ -11,10 +11,10 @@
 var expect    = require('chai').expect;
 var request = require('request');
 
-var fetchStock = async function(stock){
+var fetchStock = function(stock){
   let url = "https://api.iextrading.com/1.0/stock/"+stock+"/quote";
   let result;
-  await request(url, function (error, response, body) {
+  request(url, function (error, response, body) {
     if (!error && response.statusCode == 200) {
         result = response.body;
     }
