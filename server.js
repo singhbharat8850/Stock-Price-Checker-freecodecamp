@@ -38,7 +38,7 @@ MongoClient.connect(CONNECTION_STRING, function(err, db) {
   } else {
     console.log('database connected');
     //Routing for API 
-    apiRoutes(app, db); 
+    apiRoutes(app); 
     
   }
 });
