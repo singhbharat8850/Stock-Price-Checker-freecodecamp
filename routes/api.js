@@ -9,7 +9,8 @@
 'use strict';
 
 var expect    = require('chai').expect;
-var data = require('../controllers/stockHandler.js');
+var fetchStock = require('../controllers/stockHandler.js');
+
 
 module.exports = function (app) {
 
@@ -18,17 +19,19 @@ module.exports = function (app) {
       let stock = req.query.stock;
       let like  = req.query.like || false;
     
+      console.log(fet(stock));
+    
       // Array.isArray() to check if two stocks
       // like false if no like
       // if no like do not need to save ip
       
       // { _id: stock_id, name: stock_name, ips: ['ip', 'that', 'like', 'this', 'stock'] }
     
-      if(!like && !Array.isArray(stock)){
-        let stockData = data('goog');
-        //stockData.likes = 0;
-        res.json({stockData});
-      }
+      // if(!like && !Array.isArray(stock)){
+      //   let stockData = data('goog');
+      //   //stockData.likes = 0;
+      //   res.json({stockData});
+      // }
     });
     
 };

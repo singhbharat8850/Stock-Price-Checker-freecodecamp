@@ -1,15 +1,17 @@
 var request = require('request');
 
-module.exports = function(stock){
+module.exports = function(stock, like){
   let url = "https://api.iextrading.com/1.0/stock/"+stock+"/quote";
   request(url, function (error, response, body) {
     if (!error && response.statusCode == 200) {
       let data = JSON.parse(body);
-      return {
+      let stockData = {
         stock: data.symbol,
-        price: data.open
+        price: data.open,
+        likes: like
       }
 
+      return stockData;
     }
   });
 }
