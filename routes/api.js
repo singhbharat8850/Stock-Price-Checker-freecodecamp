@@ -30,7 +30,7 @@ module.exports = function (app,db) {
       let stock = req.query.stock;
       let like  = req.query.like || false;
     
-      // one stock without like --- no database access needed
+      // one stock without like --- see any previous like exixts in database
       // one stock with like --- save like api to database 
       // two stocks without like --- save like and show rel_likes
       // two stocks with like --- no database access needed, rel_likes always 0;
@@ -42,26 +42,11 @@ module.exports = function (app,db) {
       }
     
       function oneStockWithoutLike(stock){
-        fetchStock(stock)
-          .then((data) =>{
-            let stockData = { stock: data.symbol, price: data.open, likes: 0}
-            res.json({stockData});
-        })
-          .catch((err) => {console.log(err)})
+        
       }
       
       function oneStockWithLike(stock){
-        db.collection('stock-likes').findOne({name: stock})
-          .then((data, err) => {
-          if(data){
-            console.log(data)
-          } else {
-            db.collection('stock-likes').insertOne({name: stock, ips: [req.ip]},(data,err) => {
-              console.log(data);
-            })
-          }
-          
-        })
+        
       }
       
     
@@ -69,7 +54,7 @@ module.exports = function (app,db) {
       // like false if no like
       // if no like do not need to save ip
       
-      // { _id: stock_id, name: stock_name, ips: ['ip', 'that', 'like', 'this', 'stock'] }
+      // 
     
       // if(!like && !Array.isArray(stock)){
       //   let stockData = data('goog');
