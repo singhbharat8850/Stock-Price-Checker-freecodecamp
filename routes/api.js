@@ -10,18 +10,18 @@
 
 var expect    = require('chai').expect;
 var request = require('request');
+var fetch = require('node-fetch');
 
-var fetchStock = function(stock){
+async function fetchStock(stock){
   let url = "https://api.iextrading.com/1.0/stock/"+stock+"/quote";
-  let result;
-  request(url, function (error, response, body) {
-    if (!error && response.statusCode == 200) {
-        result = response.body;
-    }
-  });
+  let response = await fetch(url);
+  let data = await response.json();
+  //console.log(data);
+  if(data){
+    return data;
+  }
+};
   
-  return result;
-}
 
 module.exports = function (app) {
 
@@ -30,14 +30,8 @@ module.exports = function (app) {
       let stock = req.query.stock;
       //let like  = req.query.like || false;
     
-      
-       let data = fetchStock(stock).then((err,result)=>{
-         console.log(err);
-         console.log(result);
-       })
-      console.log(fetchStock(stock));
-      console.log(data);
-      res.json(fetchStock(stock));
+      let data = 
+      res.json();
     
       // Array.isArray() to check if two stocks
       // like false if no like
