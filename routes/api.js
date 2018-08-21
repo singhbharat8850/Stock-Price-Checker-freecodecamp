@@ -9,17 +9,31 @@
 'use strict';
 
 var expect    = require('chai').expect;
-var fetchStock = require('../controllers/stockHandler.js');
+var request = require('request');
 
+var fetchStock = function(stock){
+  let url = "https://api.iextrading.com/1.0/stock/"+stock+"/quote";
+  let result;
+  request(url, function (error, response, body) {
+    //console.log(error);
+    console.log(response.body);
+    if (!error && response.statusCode == 200) {
+        result = response.body;
+    }
+  });
+  return result;
+}
 
 module.exports = function (app) {
 
   app.route('/api/stock-prices')
     .get(function (req, res){
       let stock = req.query.stock;
-      let like  = req.query.like || false;
-    
-      console.log(fet(stock));
+      //let like  = req.query.like || false;
+      
+      let data = fetchStock(stock);
+      console.log(fetchStock(stock));
+      res.json(fetchStock(stock));
     
       // Array.isArray() to check if two stocks
       // like false if no like
