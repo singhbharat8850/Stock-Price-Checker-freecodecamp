@@ -23,7 +23,7 @@ async function fetchStock(stock){
 };
   
 
-module.exports = function (app) {
+module.exports = function (app,db) {
 
   app.route('/api/stock-prices')
     .get(function (req, res){
@@ -35,14 +35,22 @@ module.exports = function (app) {
       // two stocks without like --- save like and show rel_likes
       // two stocks with like --- no database access needed, rel_likes always 0;
     
+      if(!Array.isArray(stock) && !like){
+        oneStockWithoutLike(stock);
+      } 
+    
       function oneStockWithoutLike(stock){
         fetchStock(stock)
           .then((data) =>{
-            let stockData = { stock: data.symbol, price: data.open }
+            let stockData = { stock: data.symbol, price: data.open, likes: 0}
+            res.json({stockData});
         })
           .catch((err) => {console.log(err)})
       }
-    
+      
+      function oneStockWithLike(stock){
+        db.collection('stock-likes').find({name: stock})
+      }
       
     
       // Array.isArray() to check if two stocks
