@@ -22,7 +22,7 @@ module.exports = function (app) {
       // like false if no like
       // if no like do not need to save ip
       
-      // { _id: stock_id, name: stock_name, ips: ['ip', 'that', 'like', 'this', 'stock'], }
+      // { _id: stock_id, name: stock_name, ips: ['ip', 'that', 'like', 'this', 'stock'] }
       
       console.log(stock, like);
     });
