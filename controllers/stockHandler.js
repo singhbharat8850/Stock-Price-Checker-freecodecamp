@@ -5,12 +5,11 @@ module.exports = function(stock){
   request(url, function (error, response, body) {
     if (!error && response.statusCode == 200) {
       let data = JSON.parse(body);
-      let stockData = {
+      return {
         stock: data.symbol,
         price: data.open
       }
 
-      return stockData
     }
   });
 }

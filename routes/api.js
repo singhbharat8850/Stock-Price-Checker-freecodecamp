@@ -9,7 +9,7 @@
 'use strict';
 
 var expect    = require('chai').expect;
-//var stockData = require('../controllers/stockHandler.js');
+var data = require('../controllers/stockHandler.js');
 
 module.exports = function (app) {
 
@@ -23,8 +23,12 @@ module.exports = function (app) {
       // if no like do not need to save ip
       
       // { _id: stock_id, name: stock_name, ips: ['ip', 'that', 'like', 'this', 'stock'] }
-      
-      console.log(stock, like);
+    
+      if(!like && !Array.isArray(stock)){
+        let stockData = data('goog');
+        //stockData.likes = 0;
+        res.json({stockData});
+      }
     });
     
 };
