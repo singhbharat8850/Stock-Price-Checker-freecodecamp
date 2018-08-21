@@ -37,7 +37,9 @@ module.exports = function (app,db) {
     
       if(!Array.isArray(stock) && !like){
         oneStockWithoutLike(stock);
-      } 
+      } else if(!Array.isArray(stock) && like){
+        oneStockWithLike(stock)
+      }
     
       function oneStockWithoutLike(stock){
         fetchStock(stock)
@@ -49,7 +51,17 @@ module.exports = function (app,db) {
       }
       
       function oneStockWithLike(stock){
-        db.collection('stock-likes').find({name: stock})
+        db.collection('stock-likes').findOne({name: stock})
+          .then((data, err) => {
+          if(data){
+            console.log(data)
+          } else {
+            db.collection('stock-likes').insertOne({name: stock, ips: [req.ip]},(data,err) => {
+              console.log(data);
+            })
+          }
+          
+        })
       }
       
     
