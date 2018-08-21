@@ -13,11 +13,14 @@ var request = require('request');
 
 var fetchStock = async function(stock){
   let url = "https://api.iextrading.com/1.0/stock/"+stock+"/quote";
-  request(url, function (error, response, body) {
+  let result;
+  await request(url, function (error, response, body) {
     if (!error && response.statusCode == 200) {
-        await response.body;
+        result = response.body;
     }
   });
+  
+  return result;
 }
 
 module.exports = function (app) {
@@ -27,15 +30,14 @@ module.exports = function (app) {
       let stock = req.query.stock;
       //let like  = req.query.like || false;
     
-      console.log(typeof stock)
       
-       let data = fetchStock(stock, (err,data)=>{
-         if(data){
-           return data;
-         }
-       });
-    
+       let data = fetchStock(stock).then((err,result)=>{
+         console.log(err);
+         console.log(result);
+       })
+      console.log(fetchStock(stock));
       console.log(data);
+      res.json(fetchStock(stock));
     
       // Array.isArray() to check if two stocks
       // like false if no like
