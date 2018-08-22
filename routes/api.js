@@ -21,7 +21,7 @@ async function fetchStock(stock, like){
     let stockData = {
       stock: data.symbol,
       price: data.open,
-      likes: like
+      likes: like || 0
     }
     
     return stockData;
@@ -54,7 +54,7 @@ module.exports = function (app,db) {
         .then((data) => {
           if(!data){
             db.collection(ip).insertOne({name: stock}, (data, err) => {
-              if(data){
+              if(data.insertedCount===1){
                 fetchStock(stock, 1).then((data) => res.json(data));
               } else {
                 console.log(err);
@@ -64,6 +64,8 @@ module.exports = function (app,db) {
             fetchStock(stock, 1).then((data) => res.json(data));
           }
         })
+      } else if(Array.isArray(stock) && !like){
+        
       }
       
       // one stock with like --- save like api to database 
