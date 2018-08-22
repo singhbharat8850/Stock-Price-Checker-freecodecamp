@@ -21,7 +21,7 @@ async function fetchStock(stock, like){
     let stockData = {
       stock: data.symbol,
       price: data.open,
-      likes: like || 0
+      likes: like 
     }
     
     return stockData;
@@ -65,6 +65,29 @@ module.exports = function (app,db) {
           }
         })
       } else if(Array.isArray(stock) && !like){
+        let firstStock = {};
+        let secondStock = {};
+        
+        db.collection(ip).findOne({name: stock[0]})
+        .then((data) => {
+          if(!data){
+            fetchStock(stock, 0).then((data) => firstStock = data);
+          } else {
+            fetchStock(stock, 1).then((data) => firstStock = data);
+          }
+        }).then(
+        
+        db.collection(ip).findOne({name: stock[1]})
+        .then((data) => {
+          if(!data){
+            fetchStock(stock, 0).then((data) => secondStock = data);
+          } else {
+            fetchStock(stock, 1).then((data) => secondStock = data);
+          }
+        })).then((firstStock, secondStock) => {
+          let stockData = {firstStock, secondStock};
+          res.json({stockData});
+        })
         
       }
       
