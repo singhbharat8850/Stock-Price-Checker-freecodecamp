@@ -64,33 +64,7 @@ module.exports = function (app,db) {
             fetchStock(stock, 1).then((data) => res.json(data));
           }
         })
-      } else if(Array.isArray(stock) && !like){
-        let firstStock = {};
-        let secondStock = {};
-        
-        db.collection(ip).findOne({name: stock[0]})
-        .then((data) => {
-          if(!data){
-            fetchStock(stock, 0).then((data) => firstStock = data);
-          } else {
-            fetchStock(stock, 1).then((data) => firstStock = data);
-          }
-        }).then(
-        
-        db.collection(ip).findOne({name: stock[1]})
-        .then((data) => {
-          if(!data){
-            fetchStock(stock, 0).then((data) => secondStock = data);
-          } else {
-            fetchStock(stock, 1).then((data) => secondStock = data);
-          }
-        })).then((firstStock, secondStock) => {
-          let stockData = {firstStock, secondStock};
-          res.json({stockData});
-        })
-        
-      }
-      
+      } 
       // one stock with like --- save like api to database 
       // two stocks without like --- save like and show rel_likes
       // two stocks with like --- no database access needed, rel_likes always 0;
