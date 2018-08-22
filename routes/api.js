@@ -13,7 +13,7 @@ var request = require('request');
 var fetch = require('node-fetch');
 
 async function fetchStock(stock){
-  let url = 
+  let url = "https://api.iextrading.com/1.0/stock/"+stock+"/quote";
   let response = await fetch(url);
   let data = await response.json();
   //console.log(data);
@@ -27,16 +27,21 @@ module.exports = function (app,db) {
 
   app.route('/api/stock-prices')
     .get(function (req, res){
-      let url   = "https://api.iextrading.com/1.0/stock/"+stock+"/quote";
       let stock = req.query.stock;
       let like  = req.query.like || false;
       let ip    = req.ip
+      let url   = "https://api.iextrading.com/1.0/stock/"+stock+"/quote";
+
+      // check for valid stock
+      
+      fetch(url).then((data) => console.log(data.json()))
+      
+      
     
       // one stock without like --- see any previous like exixts in database
       
       if(!Array.isArray(stock) && !like){
-        fetch(url)
-        .then((data => data.json()
+             
       }
       
       // one stock with like --- save like api to database 
