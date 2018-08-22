@@ -33,7 +33,7 @@ module.exports = function (app,db) {
 
   app.route('/api/stock-prices')
     .get(function (req, res){
-      let url   = "https://api.iextrading.com/1.0/stock/"+stock+"/quote";
+      //let url   = "https://api.iextrading.com/1.0/stock/"+stock+"/quote";
       let stock = req.query.stock;
       let like  = req.query.like || false;
       let ip    = req.ip
@@ -44,9 +44,26 @@ module.exports = function (app,db) {
          db.collection(ip).findOne({name: stock})
          .then((data) => {
            if(!data){
-             
+             fetchStock(stock, 0).then((data) => res.json(data));
+           } else {
+             fetchStock(stock, 1).then((data) => res.json(data));
            }
-         })
+         }).catch(err => console.log(err))
+      } else if(!Array.isArray(stock) && like){
+        db.collection(ip).findOne({name: stock})
+        .then((data) => {
+          if(!data){
+            db.collection(ip).insertOne({name: stock}, (data, err) => {
+              if(data){
+                fetchStock(stock, 1).then((data) => res.json(data));
+              } else {
+                console.log(err);
+              }
+            })
+          } else {
+            fetchStock(stock, 1).then((data) => res.json(data));
+          }
+        })
       }
       
       // one stock with like --- save like api to database 
