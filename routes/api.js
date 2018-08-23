@@ -51,24 +51,25 @@ module.exports = function (app,db) {
         return obj1.likes - obj2.likes;
       }
     
+      function sendStock(like, res){
+        fetchStock(stock).then((data) => {
+          if(data){
+            data.like = like;
+            res.json({stockData: data})
+          }
+        })
+      }
+    
       // if one stock and no likes 
+    
+      
     
       if(!Array.isArray(stock) && !like){
         findLike(stock).then((data) => {
           if(!data){
-            fetchStock(stock).then((data) => {
-              if(data){
-                data.like = 0;
-                res.json({stockData: data})
-              }
-            })
+            sendStock(0,res);
           } else {
-            fetchStock(stock).then((data) => {
-              if(data){
-                data.like = 1;
-                res.json({stockData: data})
-              }
-            })
+            sendStock(1,res);
           }
         }).catch((err) => console.log(err))
       }
@@ -76,7 +77,14 @@ module.exports = function (app,db) {
     // if one stock and like
     
     if(!Array.isArray(stock) && like){
-      
+      findLike(stock).then((data) => {
+        if(!data){
+          saveLike(stock).then((data) => {
+            if(data.inserted
+            console.log(data);
+          })
+        }
+      }).catch((err) => console.log(err));
     }
       
     });
