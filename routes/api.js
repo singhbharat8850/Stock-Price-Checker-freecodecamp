@@ -40,6 +40,7 @@ module.exports = function (app,db) {
       async function findLike(stock){
         let response = await db.collection(ip).findOne({name:stock});
         return response;
+        console.log(response);
       }
     
       async function saveLike(stock){
@@ -54,7 +55,23 @@ module.exports = function (app,db) {
       // if one stock and no likes 
     
       if(!Array.isArray(stock) && !like){
-        findLike
+        findLike(stock).then((data) => {
+          if(!data){
+            fetchStock(stock, (data) => {
+              if(data){
+                data.like = 0;
+                res.json({stockData: data})
+              }
+            })
+          } else {
+            fetchStock(stock, (data) => {
+              if(data){
+                data.like = 1;
+                res.json({stockData: data})
+              }
+            })
+          }
+        }).catch((err) => console.log(err))
       }
       
     });
