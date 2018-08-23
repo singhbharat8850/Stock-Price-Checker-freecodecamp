@@ -60,6 +60,8 @@ module.exports = function (app,db) {
         })
       }
     
+      function stockObject(stock){}
+    
       // if one stock and no likes 
     
       
