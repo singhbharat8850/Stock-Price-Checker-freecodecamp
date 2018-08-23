@@ -45,11 +45,15 @@ module.exports = function (app,db) {
          .then((data) => {
            if(!data){
              fetchStock(stock, 0).then((data) => res.json(data));
-           } else {
+           } 
+           
+      if (!Array.isArray(stock) && like{
              fetchStock(stock, 1).then((data) => res.json(data));
            }
          }).catch(err => console.log(err))
-      } else if(!Array.isArray(stock) && like){
+      }
+        
+      if(!Array.isArray(stock) && like){
         db.collection(ip).findOne({name: stock})
         .then((data) => {
           if(!data){
@@ -64,7 +68,7 @@ module.exports = function (app,db) {
             fetchStock(stock, 1).then((data) => res.json(data));
           }
         })
-      } 
+      }
       // one stock with like --- save like api to database 
       // two stocks without like --- save like and show rel_likes
       // two stocks with like --- no database access needed, rel_likes always 0;
