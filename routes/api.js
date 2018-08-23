@@ -80,11 +80,23 @@ module.exports = function (app,db) {
       findLike(stock).then((data) => {
         if(!data){
           saveLike(stock).then((data) => {
-            if(data.inserted
-            console.log(data);
+            if(data.insertedCount === 1){
+              sendStock(1,res);
+            }
           })
+        } else {
+          sendStock(1,res);
         }
       }).catch((err) => console.log(err));
+    }
+    
+    // if two stocks and no like 
+    
+    if(Array.isArray(stock) && !like){
+      let firstStock = stock[0];
+      let lastStock = stock[1];
+      
+      
     }
       
     });
