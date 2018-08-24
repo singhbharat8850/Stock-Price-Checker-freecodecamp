@@ -90,11 +90,9 @@ module.exports = function (app,db) {
         if(stock){
           if(stock.likes === 1){
             res.json({stockData: stock})
+            console.log('like true')
           } else {
-            saveLike(stock, (data, err) => {
-              console.log(data)
-              
-            })
+            console.log('no like');
           }
         }
       }).catch(err => console.log(err));
@@ -109,7 +107,7 @@ module.exports = function (app,db) {
       stockObj(firstStock).then((stock1,err) => {
         if(stock1){
           let obj1 = stock1;
-          console.log(obj1);
+          
           stockObj(lastStock).then((stock2, err) => {
             if(stock2){
               let obj2 = stock2;
