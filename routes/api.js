@@ -78,12 +78,12 @@ module.exports = function (app,db) {
           }
       }
     
-      function findAndUpdate(stock){
-        stockObj(stock).then((stock) => {
-          if(stock){
-            if(stock.likes === 1){
-              return stock;
-            }
+      async function findAndUpdate(stock){
+        
+        let obj = await stockObj(stock)
+        if(obj.likes === 1){
+          return obj;
+        }
             if(stock.likes === 0){
               saveLike(stock.stock).then((data) => {
                 if(data.insertedCount === 1){
@@ -164,8 +164,13 @@ module.exports = function (app,db) {
     if(Array.isArray(stock) && like){
       let firstStock = stock[0].toUpperCase();
       let lastStock = stock[1].toUpperCase();
-      
-      findAndUpdate(firstStock).then((obj1) => {})
+      console.log(stock);
+      findAndUpdate(firstStock).then((obj1) => {
+        if(obj1){
+          console.log(obj1);
+        }
+        
+      })
       
     }
       
