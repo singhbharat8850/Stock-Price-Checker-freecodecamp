@@ -117,11 +117,12 @@ module.exports = function (app,db) {
       let firstStock = stock[0];
       let lastStock = stock[1];
       
-      console.log(stockObj(firstStock));
-      stockObj(firstStock).then((data) => {
+      
+      stockObj(firstStock, (data) => {
+        console.log(data)
         if(data){
           let obj1 = data;
-          stockObj(lastStock).then((data) => {
+          stockObj(lastStock,(data) => {
             if(data){
               let obj2 = data;
               let stockData = [
