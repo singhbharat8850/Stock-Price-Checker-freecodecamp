@@ -118,44 +118,35 @@ module.exports = function (app,db) {
       let firstStock = stock[0];
       let lastStock = stock[1];
       
-      console.log(stockObj);
       
-      stockObj(firstStock,(data,err) => {
-        if(!data){
-          console.log(err)
+      stockObj(firstStock, (data, err) => {
+        console.log(data)
+        if(data){
+          let obj1 = data;
+          stockObj(lastStock,(data) => {
+            if(data){
+              let obj2 = data;
+              let stockData = [
+                {
+                  stock: obj1.stock,
+                  price: obj1.price,
+                  rel_likes: relLikes(obj1, obj2)
+                },
+                {
+                  stock: obj2.stock,
+                  price: obj2.price,
+                  rel_likes: relLikes(obj2, obj1)
+                }
+              ]
+              
+              res.json({stockData});
+              
+            }
+          })
         } else {
-          console.log(data);
+          console.log(err);
         }
       })
-      
-//       stockObj(firstStock, (data, err) => {
-//         console.log(data)
-//         if(data){
-//           let obj1 = data;
-//           stockObj(lastStock,(data) => {
-//             if(data){
-//               let obj2 = data;
-//               let stockData = [
-//                 {
-//                   stock: obj1.stock,
-//                   price: obj1.price,
-//                   rel_likes: relLikes(obj1, obj2)
-//                 },
-//                 {
-//                   stock: obj2.stock,
-//                   price: obj2.price,
-//                   rel_likes: relLikes(obj2, obj1)
-//                 }
-//               ]
-              
-//               res.json({stockData});
-              
-//             }
-//           })
-//         } else {
-//           console.log(err);
-//         }
-//       })
       
     }
       
