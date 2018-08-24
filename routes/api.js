@@ -62,7 +62,6 @@ module.exports = function (app,db) {
         let stk = await fetchStock(stock);
         if(stk){
           let data = await findLike(stock);
-          console.log(data);
             if(data){
               return {
                 stock: stk.stock,
@@ -77,6 +76,24 @@ module.exports = function (app,db) {
               }
             }
           }
+      }
+    
+      function findAndUpdate(stock){
+        stockObj(stock).then((stock) => {
+          if(stock){
+            if(stock.likes === 1){
+              return stock;
+            }
+            if(stock.likes === 0){
+              saveLike(stock.stock).then((data) => {
+                if(data.insertedCount === 1){
+                  stock.likes = 1;
+                  return stock
+                }
+              }).catch(err => console.log(err));
+            }
+          }
+        })
       }
     
       // if one stock and no likes 
@@ -148,21 +165,7 @@ module.exports = function (app,db) {
       let firstStock = stock[0].toUpperCase();
       let lastStock = stock[1].toUpperCase();
       
-      stockObj(firstStock).then((stock1) => {
-        if(stock1){
-          if(stock1.likes === 1){
-            let obj1 = stock1;
-          }
-          if(stock1.likes === 0){
-            saveLike(stock1.stock).then((data) => {
-              if(data.insertedCount === 1){
-                stock1.likes = 1;
-                let obj1 = stock1
-              }
-            }).catch(err => console.log(err));
-          }
-        }
-      })
+      findAndUpdate(firstStock).then((obj1) => {})
       
     }
       
