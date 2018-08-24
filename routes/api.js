@@ -60,29 +60,26 @@ module.exports = function (app,db) {
         })
       }
     
-      function stockObj(stock){
-        fetchStock(stock).then((stk, err) => {
-          if(stk){
-            
-            findLike(stock).then((data) => {
-              if(!data){
-                return {
-                  stock: stk.symbol,
-                  price: stk.open,
-                  likes: 0
-                }
-              } else {
-                return {
-                  stock: stk.symbol,
-                  price: stk.open,
-                  likes: 1
-                }
+      async function stockObj(stock){
+        let stk = await fetchStock(stock);
+        console.log(stk);
+        if(stk){
+          let data = await findLike(stock);
+          console.log(data);
+            if(!data){
+              return {
+                stock: stk.stock,
+                price: stk.price,
+                likes: 0
               }
-            })
-          } else {
-            console.log(err);
+            } else {
+              return {
+                stock: stk.stock,
+                price: stk.price,
+                likes: 1
+              }
+            }
           }
-        })
       }
     
       // if one stock and no likes 
@@ -121,7 +118,9 @@ module.exports = function (app,db) {
       let firstStock = stock[0];
       let lastStock = stock[1];
       
-      stockObj(firstStock).then((data,err) => {
+      console.log(stockObj);
+      
+      stockObj(firstStock,(data,err) => {
         if(!data){
           console.log(err)
         } else {
