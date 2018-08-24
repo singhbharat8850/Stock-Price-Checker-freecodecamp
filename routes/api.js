@@ -118,11 +118,9 @@ module.exports = function (app,db) {
       stockObj(firstStock).then((stock1,err) => {
         if(stock1){
           let obj1 = stock1;
-          console.log(obj1)
           stockObj(lastStock).then((stock2, err) => {
             if(stock2){
               let obj2 = stock2;
-              console.log(obj2);
               let stockData = [
                 {
                   stock: obj1.stock,
@@ -156,10 +154,10 @@ module.exports = function (app,db) {
             let obj1 = stock1;
           }
           if(stock1.likes === 0){
-            saveLike(stock.stock).then((data) => {
+            saveLike(stock1.stock).then((data) => {
               if(data.insertedCount === 1){
-                stock.likes = 1;
-                res.json({stockData: stock});
+                stock1.likes = 1;
+                let obj1 = stock1
               }
             }).catch(err => console.log(err));
           }
