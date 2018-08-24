@@ -84,16 +84,14 @@ module.exports = function (app,db) {
         if(obj.likes === 1){
           return obj;
         }
-            if(stock.likes === 0){
-              saveLike(stock.stock).then((data) => {
-                if(data.insertedCount === 1){
-                  stock.likes = 1;
-                  return stock
-                }
-              }).catch(err => console.log(err));
+        if(obj.likes === 0){
+          saveLike(stock.stock).then((data) => {
+            if(data.insertedCount === 1){
+              stock.likes = 1;
+              return stock
             }
-          }
-        })
+          });
+        }
       }
     
       // if one stock and no likes 
@@ -167,7 +165,11 @@ module.exports = function (app,db) {
       console.log(stock);
       findAndUpdate(firstStock).then((obj1) => {
         if(obj1){
-          console.log(obj1);
+          findAndUpdate(lastStock).then((obj2) => {
+            if(obj2){
+              res.json({stockData: [obj1, obj2]})
+            }
+          })
         }
         
       })
