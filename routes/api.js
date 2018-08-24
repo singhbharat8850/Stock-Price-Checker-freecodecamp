@@ -91,9 +91,13 @@ module.exports = function (app,db) {
           if(stock.likes === 1){
             res.json({stockData: stock})
             console.log('like true')
-          } else {
-            saveLike(stock,(data,err) => {
-              console.log(data);
+          } 
+          if(stock.likes === 0){
+            console.log('no like')
+            db.collection(ip).insertOne({name: stock.stock}, (data) => {
+              if(data){
+                console.log(data);
+              }
             })
           }
         }
