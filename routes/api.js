@@ -61,7 +61,7 @@ module.exports = function (app,db) {
       }
     
       function stockObj(stock){
-        fetchStock(stock).then((data) => {
+        fetchStock(stock).then((data, err) => {
           if(data){
             let obj = {
               stock: data.symbol,
@@ -77,6 +77,8 @@ module.exports = function (app,db) {
                 return obj;
               }
             })
+          } else {
+            console.log(err);
           }
         })
       }
@@ -117,8 +119,7 @@ module.exports = function (app,db) {
       let firstStock = stock[0];
       let lastStock = stock[1];
       
-      
-      stockObj(firstStock, (data) => {
+      stockObj(firstStock, (data, err) => {
         console.log(data)
         if(data){
           let obj1 = data;
@@ -142,6 +143,8 @@ module.exports = function (app,db) {
               
             }
           })
+        } else {
+          console.log(err);
         }
       })
       
