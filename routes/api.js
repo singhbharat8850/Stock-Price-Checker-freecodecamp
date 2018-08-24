@@ -42,6 +42,7 @@ module.exports = function (app,db) {
       async function findLike(stock){
         let response = await db.collection(ip).findOne({name:stock});
         return response;
+        console.log(response);
       }
     
       async function saveLike(stock){
@@ -57,17 +58,18 @@ module.exports = function (app,db) {
         let stk = await fetchStock(stock);
         if(stk){
           let data = await findLike(stock);
-            if(!data){
+          console.log(data);
+            if(data){
               return {
                 stock: stk.stock,
                 price: stk.price,
-                likes: 0
+                likes: 1
               }
             } else {
               return {
                 stock: stk.stock,
                 price: stk.price,
-                likes: 1
+                likes: 0
               }
             }
           }
@@ -78,6 +80,7 @@ module.exports = function (app,db) {
       
     
       if(!Array.isArray(stock) && !like){
+        let stock = stock.toUppoerCase();
         stockObj(stock).then((stock) => {
           res.json({stockData: stock})
         }).catch(err => console.log(err));
@@ -86,6 +89,7 @@ module.exports = function (app,db) {
     // if one stock and like
     
     if(!Array.isArray(stock) && like){
+      let stock = stock.toUppoerCase();
       stockObj(stock).then((stock) => {
         if(stock){
           if(stock.likes === 1){
@@ -114,7 +118,7 @@ module.exports = function (app,db) {
       stockObj(firstStock).then((stock1,err) => {
         if(stock1){
           let obj1 = stock1;
-          
+          console.log(obj1)
           stockObj(lastStock).then((stock2, err) => {
             if(stock2){
               let obj2 = stock2;
