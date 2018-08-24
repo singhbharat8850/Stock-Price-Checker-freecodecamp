@@ -62,10 +62,8 @@ module.exports = function (app,db) {
     
       async function stockObj(stock){
         let stk = await fetchStock(stock);
-        console.log(stk);
         if(stk){
           let data = await findLike(stock);
-          console.log(data);
             if(!data){
               return {
                 stock: stk.stock,
@@ -120,12 +118,12 @@ module.exports = function (app,db) {
       
       
       stockObj(firstStock, (data, err) => {
-        console.log(data)
         if(data){
+          console.log(data);
           let obj1 = data;
-          stockObj(lastStock,(data) => {
+          stockObj(lastStock,(data1) => {
             if(data){
-              let obj2 = data;
+              let obj2 = data1;
               let stockData = [
                 {
                   stock: obj1.stock,
