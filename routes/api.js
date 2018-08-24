@@ -96,10 +96,8 @@ module.exports = function (app,db) {
         if(stock){
           if(stock.likes === 1){
             res.json({stockData: stock})
-            console.log('like true')
           } 
           if(stock.likes === 0){
-            console.log('no like')
             saveLike(stock.stock).then((data) => {
               if(data.insertedCount === 1){
                 stock.likes = 1;
@@ -141,6 +139,30 @@ module.exports = function (app,db) {
               res.json({stockData});
             }
           })
+        }
+      })
+      
+    }
+    
+    // if two stocks and like
+    
+    if(Array.isArray(stock) && like){
+      let firstStock = stock[0].toUpperCase();
+      let lastStock = stock[1].toUpperCase();
+      
+      stockObj(firstStock).then((stock1) => {
+        if(stock1){
+          if(stock1.likes === 1){
+            let obj1 = stock1;
+          }
+          if(stock1.likes === 0){
+            saveLike(stock.stock).then((data) => {
+              if(data.insertedCount === 1){
+                stock.likes = 1;
+                res.json({stockData: stock});
+              }
+            }).catch(err => console.log(err));
+          }
         }
       })
       
