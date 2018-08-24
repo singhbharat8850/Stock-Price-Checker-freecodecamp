@@ -27,6 +27,8 @@ async function fetchStock(stock){
 };
 
 
+
+
   
 
 module.exports = function (app,db) {
@@ -49,15 +51,6 @@ module.exports = function (app,db) {
     
       function relLikes(obj1, obj2){
         return obj1.likes - obj2.likes;
-      }
-    
-      function sendStock(like, res){
-        fetchStock(stock).then((data) => {
-          if(data){
-            data.like = like;
-            res.json({stockData: data})
-          }
-        })
       }
     
       async function stockObj(stock){
@@ -85,29 +78,13 @@ module.exports = function (app,db) {
       
     
       if(!Array.isArray(stock) && !like){
-        findLike(stock).then((data) => {
-          if(!data){
-            sendStock(0,res);
-          } else {
-            sendStock(1,res);
-          }
-        }).catch((err) => console.log(err))
+        
       }
     
     // if one stock and like
     
     if(!Array.isArray(stock) && like){
-      findLike(stock).then((data) => {
-        if(!data){
-          saveLike(stock).then((data) => {
-            if(data.insertedCount === 1){
-              sendStock(1,res);
-            }
-          })
-        } else {
-          sendStock(1,res);
-        }
-      }).catch((err) => console.log(err));
+      
     }
     
     // if two stocks and no like 
@@ -116,14 +93,14 @@ module.exports = function (app,db) {
       let firstStock = stock[0];
       let lastStock = stock[1];
       
-      
-      stockObj(firstStock, (data, err) => {
-        if(data){
-          console.log(data);
-          let obj1 = data;
-          stockObj(lastStock,(data1) => {
-            if(data){
-              let obj2 = data1;
+      stockObj(firstStock).then((stock1,err) => {
+        if(stock1){
+          let obj1 = stock1;
+          console.log(obj1);
+          stockObj(lastStock).then((stock2, err) => {
+            if(stock2){
+              let obj2 = stock2;
+              console.log(obj2);
               let stockData = [
                 {
                   stock: obj1.stock,
@@ -138,11 +115,8 @@ module.exports = function (app,db) {
               ]
               
               res.json({stockData});
-              
             }
           })
-        } else {
-          console.log(err);
         }
       })
       
