@@ -39,6 +39,10 @@ module.exports = function (app,db) {
       let like  = req.query.like || false;
       let ip    = req.ip
       
+      if(!Array.isArray(stock)){
+        stock = (req.query.stock).toUpperCase();
+      }
+      
       async function findLike(stock){
         let response = await db.collection(ip).findOne({name:stock});
         return response;
@@ -80,7 +84,6 @@ module.exports = function (app,db) {
       
     
       if(!Array.isArray(stock) && !like){
-        let stock = stock.toUppoerCase();
         stockObj(stock).then((stock) => {
           res.json({stockData: stock})
         }).catch(err => console.log(err));
@@ -89,7 +92,6 @@ module.exports = function (app,db) {
     // if one stock and like
     
     if(!Array.isArray(stock) && like){
-      let stock = stock.toUppoerCase();
       stockObj(stock).then((stock) => {
         if(stock){
           if(stock.likes === 1){
@@ -112,8 +114,8 @@ module.exports = function (app,db) {
     // if two stocks and no like 
     
     if(Array.isArray(stock) && !like){
-      let firstStock = stock[0];
-      let lastStock = stock[1];
+      let firstStock = stock[0].toUpperCase();
+      let lastStock = stock[1].toUpperCase();
       
       stockObj(firstStock).then((stock1,err) => {
         if(stock1){
