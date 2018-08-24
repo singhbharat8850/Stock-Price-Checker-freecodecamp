@@ -78,13 +78,26 @@ module.exports = function (app,db) {
       
     
       if(!Array.isArray(stock) && !like){
-        
+        stockObj(stock).then((stock) => {
+          res.json({stockData: stock})
+        }).catch(err => console.log(err));
       }
     
     // if one stock and like
     
     if(!Array.isArray(stock) && like){
-      
+      stockObj(stock).then((stock) => {
+        if(stock){
+          if(stock.likes === 1){
+            res.json({stockData: stock})
+          } else {
+            saveLike(stock, (data, err) => {
+              console.log(data)
+              
+            })
+          }
+        }
+      }).catch(err => console.log(err));
     }
     
     // if two stocks and no like 
