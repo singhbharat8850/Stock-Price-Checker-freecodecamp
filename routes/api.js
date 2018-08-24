@@ -61,8 +61,8 @@ module.exports = function (app,db) {
       }
     
       function stockObj(stock){
-        fetchStock(stock).then((stock, err) => {
-          if(data){
+        fetchStock(stock).then((stk, err) => {
+          if(stk){
             findLike(stock).then((data) => {
               if(!data){
                 return {
@@ -119,8 +119,6 @@ module.exports = function (app,db) {
     if(Array.isArray(stock) && !like){
       let firstStock = stock[0];
       let lastStock = stock[1];
-      
-      console.log(stockObj(firstStock));
       
 //       stockObj(firstStock, (data, err) => {
 //         console.log(data)
