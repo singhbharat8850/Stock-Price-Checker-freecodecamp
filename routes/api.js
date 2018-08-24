@@ -92,7 +92,9 @@ module.exports = function (app,db) {
             res.json({stockData: stock})
             console.log('like true')
           } else {
-            console.log('no like');
+            saveLike(stock,(data,err) => {
+              console.log(data);
+            })
           }
         }
       }).catch(err => console.log(err));
