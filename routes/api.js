@@ -60,7 +60,26 @@ module.exports = function (app,db) {
         })
       }
     
-      function stockObject(stock){}
+      function stockObj(stock){
+        fetchStock(stock).then((data) => {
+          if(data){
+            let obj = {
+              stock: data.symbol,
+              price: data.open
+            }
+
+            findLike(stock).then((data) => {
+              if(!data){
+                obj.likes = 0;
+                return obj;
+              } else {
+                obj.likes = 1;
+                return obj;
+              }
+            })
+          }
+        })
+      }
     
       // if one stock and no likes 
     
@@ -98,6 +117,32 @@ module.exports = function (app,db) {
       let firstStock = stock[0];
       let lastStock = stock[1];
       
+      console.log(stockObj(firstStock));
+      stockObj(firstStock).then((data) => {
+        if(data){
+          let obj1 = data;
+          stockObj(lastStock).then((data) => {
+            if(data){
+              let obj2 = data;
+              let stockData = [
+                {
+                  stock: obj1.stock,
+                  price: obj1.price,
+                  rel_likes: relLikes(obj1, obj2)
+                },
+                {
+                  stock: obj2.stock,
+                  price: obj2.price,
+                  rel_likes: relLikes(obj2, obj1)
+                }
+              ]
+              
+              res.json({stockData});
+              
+            }
+          })
+        }
+      })
       
     }
       
