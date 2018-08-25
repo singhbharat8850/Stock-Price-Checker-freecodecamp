@@ -19,6 +19,7 @@ module.exports = function (app,db) {
       let like  = req.query.like || false;
       let ip    = req.ip
       
+      console.log(StockHandler.fetchStock(stock));
       // Convert single stock to uppercase
       
       if(!Array.isArray(stock)){
