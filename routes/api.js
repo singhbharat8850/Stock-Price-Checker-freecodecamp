@@ -171,12 +171,24 @@ module.exports = function (app,db) {
     if(Array.isArray(stock) && like){
       let firstStock = stock[0].toUpperCase();
       let lastStock = stock[1].toUpperCase();
-      console.log(stock);
       findAndUpdate(firstStock).then((obj1) => {
         if(obj1){
           findAndUpdate(lastStock).then((obj2) => {
             if(obj2){
-              res.json({stockData: [obj1, obj2]})
+              let stockData = [
+                {
+                  stock: obj1.stock,
+                  price: obj1.price,
+                  rel_likes: relLikes(obj1, obj2)
+                },
+                {
+                  stock: obj2.stock,
+                  price: obj2.price,
+                  rel_likes: relLikes(obj2, obj1)
+                }
+              ]
+              
+              res.json({stockData});
             }
           })
         }
