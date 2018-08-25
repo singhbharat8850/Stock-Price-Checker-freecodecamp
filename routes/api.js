@@ -27,10 +27,6 @@ async function fetchStock(stock){
 };
 
 
-
-
-  
-
 module.exports = function (app,db) {
 
   app.route('/api/stock-prices')
@@ -87,16 +83,14 @@ module.exports = function (app,db) {
         if(obj.likes === 0){
           saveLike(stock.stock).then((data) => {
             if(data.insertedCount === 1){
-              stock.likes = 1;
-              return stock
+              obj.likes = 1;
+              return obj;
             }
           });
         }
       }
     
       // if one stock and no likes 
-    
-      
     
       if(!Array.isArray(stock) && !like){
         stockObj(stock).then((stock) => {
@@ -107,21 +101,26 @@ module.exports = function (app,db) {
     // if one stock and like
     
     if(!Array.isArray(stock) && like){
-      stockObj(stock).then((stock) => {
-        if(stock){
-          if(stock.likes === 1){
-            res.json({stockData: stock})
-          } 
-          if(stock.likes === 0){
-            saveLike(stock.stock).then((data) => {
-              if(data.insertedCount === 1){
-                stock.likes = 1;
-                res.json({stockData: stock});
-              }
-            }).catch(err => console.log(err));
-          }
-        }
+      
+      findAndUpdate(stock).then((stock) => {
+        res.json({stockData: stock})
       }).catch(err => console.log(err));
+      
+      // stockObj(stock).then((stock) => {
+      //   if(stock){
+      //     if(stock.likes === 1){
+      //       res.json({stockData: stock})
+      //     } 
+      //     if(stock.likes === 0){
+      //       saveLike(stock.stock).then((data) => {
+      //         if(data.insertedCount === 1){
+      //           stock.likes = 1;
+      //           res.json({stockData: stock});
+      //         }
+      //       }).catch(err => console.log(err));
+      //     }
+      //   }
+      // }).catch(err => console.log(err));
     }
     
     // if two stocks and no like 
