@@ -41,21 +41,27 @@ module.exports = function (app,db) {
         stock = (req.query.stock).toUpperCase();
       }
       
-      // check if stock is saved in database. If save under IP documents then it already added as a like
+      // check if stock is saved in database. If save under IP document then it already added as a like
     
       async function findLike(stock){
         let response = await db.collection(ip).findOne({name:stock});
         return response;
       }
     
+      // save liked stock to IP documet
+    
       async function saveLike(stock){
         let response = await db.collection(ip).insertOne({name: stock});
         return response;
       }
     
+      // difference between likes in two stocks 
+    
       function relLikes(obj1, obj2){
         return obj1.likes - obj2.likes;
       }
+    
+      // check database and return stock object with likes number
     
       async function stockObj(stock){
         let stkObj = await fetchStock(stock);
@@ -77,6 +83,8 @@ module.exports = function (app,db) {
           }
       }
     
+      // check liked stock. if already added return if not add like and return. 
+    
       async function findAndUpdate(stock){
         let obj = await stockObj(stock);
         if(obj.likes === 1){
@@ -95,29 +103,34 @@ module.exports = function (app,db) {
       // if one stock and no likes 
     
       if(!Array.isArray(stock) && !like){
-        stockObj(stock).then((stock) => {
-          res.json({stockData: stock})
+        stockObj(stock).then((stkObj) => {
+          res.json({stockData: stkObj})
         }).catch(err => console.log(err));
       }
     
     // if one stock and like
     
     if(!Array.isArray(stock) && like){
-      stockObj(stock).then((stock) => {
-        if(stock){
-          if(stock.likes === 1){
-            res.json({stockData: stock})
-          } 
-          if(stock.likes === 0){
-            saveLike(stock.stock).then((data) => {
-              if(data.insertedCount === 1){
-                stock.likes = 1;
-                res.json({stockData: stock});
-              }
-            }).catch(err => console.log(err));
-          }
+      findAndUpdate(stock).then((stkObj) => {
+        if(stkObj){
+          res.json({stockData: stkObj})
         }
       }).catch(err => console.log(err));
+      // stockObj(stock).then((stock) => {
+      //   if(stock){
+      //     if(stock.likes === 1){
+      //       res.json({stockData: stock})
+      //     } 
+      //     if(stock.likes === 0){
+      //       saveLike(stock.stock).then((data) => {
+      //         if(data.insertedCount === 1){
+      //           stock.likes = 1;
+      //           res.json({stockData: stock});
+      //         }
+      //       }).catch(err => console.log(err));
+      //     }
+      //   }
+      // }).catch(err => console.log(err));
     }
     
     // if two stocks and no like 
@@ -126,12 +139,12 @@ module.exports = function (app,db) {
       let firstStock = stock[0].toUpperCase();
       let lastStock = stock[1].toUpperCase();
       
-      stockObj(firstStock).then((stock1,err) => {
-        if(stock1){
-          let obj1 = stock1;
-          stockObj(lastStock).then((stock2, err) => {
-            if(stock2){
-              let obj2 = stock2;
+      stockObj(firstStock).then((stkObj1,err) => {
+        if(stkObj1){
+          let obj1 = stkObj1;
+          stockObj(lastStock).then((stkObj2, err) => {
+            if(stkObj2){
+              let obj2 = stkObj2;
               let stockData = [
                 {
                   stock: obj1.stock,
