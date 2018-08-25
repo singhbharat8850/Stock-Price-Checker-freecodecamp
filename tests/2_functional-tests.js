@@ -60,8 +60,8 @@ suite('Functional Tests', function() {
           assert.equal(res.status, 200);
           assert.equal(res.body.stockData[0].stock, 'GOOG');
           assert.equal(res.body.stockData[1].stock, 'MSFT');
-          assert.equal(res.body.stockData[0].rel_likes, 1);
-          assert.equal(res.body.stockData[1].rel_likes, -1);
+          assert.equal(res.body.stockData[0].rel_likes, 0);
+          assert.equal(res.body.stockData[1].rel_likes, 0);
           done();
         })
       });
@@ -74,8 +74,6 @@ suite('Functional Tests', function() {
           assert.equal(res.status, 200);
           assert.equal(res.body.stockData[0].stock, 'GOOG');
           assert.equal(res.body.stockData[1].stock, 'MSFT');
-          assert.equal(res.body.stockData[0].rel_likes, 0);
-          assert.equal(res.body.stockData[1].rel_likes, 0);
           done();
         })
       });

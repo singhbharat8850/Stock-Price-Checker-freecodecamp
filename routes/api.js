@@ -8,24 +8,8 @@
 
 'use strict';
 
-var expect    = require('chai').expect;
-var request = require('request');
-var fetch = require('node-fetch');
-
-// grab symbol and price from third party api
-async function fetchStock(stock){
-  let url = "https://api.iextrading.com/1.0/stock/"+stock+"/quote";
-  let response = await fetch(url);
-  let data = await response.json();
-  //console.log(data);
-  if(data){
-    return {
-      stock: data.symbol,
-      price: data.open
-    }
-  }
-};
-
+var expect     = require('chai').expect;
+var fetchStock = require('../controllers/stockHandler');
 
 module.exports = function (app,db) {
 
@@ -116,21 +100,6 @@ module.exports = function (app,db) {
           res.json({stockData: stkObj})
         }
       }).catch(err => console.log(err));
-      // stockObj(stock).then((stock) => {
-      //   if(stock){
-      //     if(stock.likes === 1){
-      //       res.json({stockData: stock})
-      //     } 
-      //     if(stock.likes === 0){
-      //       saveLike(stock.stock).then((data) => {
-      //         if(data.insertedCount === 1){
-      //           stock.likes = 1;
-      //           res.json({stockData: stock});
-      //         }
-      //       }).catch(err => console.log(err));
-      //     }
-      //   }
-      // }).catch(err => console.log(err));
     }
     
     // if two stocks and no like 

@@ -1,17 +1,18 @@
-var request = require('request');
+var fetch      = require('node-fetch');
 
-module.exports = function(stock, like){
+
+
+// grab symbol and price from third party api
+
+module.exports = async function fetchStock(stock){
   let url = "https://api.iextrading.com/1.0/stock/"+stock+"/quote";
-  request(url, function (error, response, body) {
-    if (!error && response.statusCode == 200) {
-      let data = JSON.parse(body);
-      let stockData = {
-        stock: data.symbol,
-        price: data.open,
-        likes: like
-      }
-
-      return stockData;
+  let response = await fetch(url);
+  let data = await response.json();
+  //console.log(data);
+  if(data){
+    return {
+      stock: data.symbol,
+      price: data.open
     }
-  });
-}
+  }
+};
