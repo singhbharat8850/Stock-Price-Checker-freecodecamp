@@ -15,6 +15,10 @@ function StockHandler(){
     }
   };
   
+  this.stock = function(stock){
+    return stock;
+  }
+  
 }
 
 // grab symbol and price from third party api

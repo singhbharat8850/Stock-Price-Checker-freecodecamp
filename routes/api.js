@@ -9,7 +9,9 @@
 'use strict';
 
 var expect     = require('chai').expect;
-var StockHandler = require('../controllers/stockHandler');
+var StockHandler = require('../controllers/stockHandler.js');
+
+console.log(StockHandler.stock('goog'));
 
 module.exports = function (app,db) {
 
