@@ -11,17 +11,20 @@
 var expect     = require('chai').expect;
 var StockHandler = require('../controllers/stockHandler.js');
 
-console.log(StockHandler.stock('goog'));
 
 module.exports = function (app,db) {
-
+  
+  var stockHandler = new StockHandler();
+  
+  console.log(stockHandler.stock('goog'));
+  
   app.route('/api/stock-prices')
     .get(function (req, res){
       let stock = req.query.stock;
       let like  = req.query.like || false;
       let ip    = req.ip
       
-      console.log(StockHandler.fetchStock(stock));
+      
       // Convert single stock to uppercase
       
       if(!Array.isArray(stock)){
@@ -51,7 +54,7 @@ module.exports = function (app,db) {
       // check database and return stock object with likes number
     
       async function stockObj(stock){
-        let stkObj = await StockHandler.fetchStock(stock);
+        let stkObj = await stockHandler.fetchStock(stock);
         if(stkObj){
           let data = await findLike(stock);
             if(data){
