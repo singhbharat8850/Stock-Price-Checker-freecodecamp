@@ -101,26 +101,21 @@ module.exports = function (app,db) {
     // if one stock and like
     
     if(!Array.isArray(stock) && like){
-      
-      findAndUpdate(stock).then((stock) => {
-        res.json({stockData: stock})
+      stockObj(stock).then((stock) => {
+        if(stock){
+          if(stock.likes === 1){
+            res.json({stockData: stock})
+          } 
+          if(stock.likes === 0){
+            saveLike(stock.stock).then((data) => {
+              if(data.insertedCount === 1){
+                stock.likes = 1;
+                res.json({stockData: stock});
+              }
+            }).catch(err => console.log(err));
+          }
+        }
       }).catch(err => console.log(err));
-      
-      // stockObj(stock).then((stock) => {
-      //   if(stock){
-      //     if(stock.likes === 1){
-      //       res.json({stockData: stock})
-      //     } 
-      //     if(stock.likes === 0){
-      //       saveLike(stock.stock).then((data) => {
-      //         if(data.insertedCount === 1){
-      //           stock.likes = 1;
-      //           res.json({stockData: stock});
-      //         }
-      //       }).catch(err => console.log(err));
-      //     }
-      //   }
-      // }).catch(err => console.log(err));
     }
     
     // if two stocks and no like 
