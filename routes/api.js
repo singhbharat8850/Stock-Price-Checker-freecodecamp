@@ -29,34 +29,10 @@ module.exports = function (app,db) {
         stock = (req.query.stock).toUpperCase();
       }
     
-      
-    
-      // check database and return stock object with likes number
-    
-      async function stockObj(stock){
-        let stkObj = await stockHandler.fetchStock(stock);
-        if(stkObj){
-          let data = await stockHandler.findLike(stock,db,ip);
-            if(data){
-              return {
-                stock: stkObj.stock,
-                price: stkObj.price,
-                likes: 1
-              }
-            } else {
-              return {
-                stock: stkObj.stock,
-                price: stkObj.price,
-                likes: 0
-              }
-            }
-          }
-      }
-    
       // check liked stock. if already added return if not add like and return. 
     
       async function findAndUpdate(stock){
-        let obj = await stockObj(stock);
+        let obj = await stockHandler.stockObj(stock,db,ip);
         if(obj.likes === 1){
           return obj;
         }
@@ -73,7 +49,7 @@ module.exports = function (app,db) {
       // if one stock and no likes 
     
       if(!Array.isArray(stock) && !like){
-        stockObj(stock).then((stkObj) => {
+        stockHandler.stockObj(stock,db,ip).then((stkObj) => {
           res.json({stockData: stkObj})
         }).catch(err => console.log(err));
       }
@@ -94,22 +70,22 @@ module.exports = function (app,db) {
       let firstStock = stock[0].toUpperCase();
       let lastStock = stock[1].toUpperCase();
       
-      stockObj(firstStock).then((stkObj1,err) => {
+      stockHandler.stockObj(firstStock,db,ip).then((stkObj1,err) => {
         if(stkObj1){
           let obj1 = stkObj1;
-          stockObj(lastStock).then((stkObj2, err) => {
+          stockHandler.stockObj(lastStock,db,ip).then((stkObj2, err) => {
             if(stkObj2){
               let obj2 = stkObj2;
               let stockData = [
                 {
                   stock: obj1.stock,
                   price: obj1.price,
-                  rel_likes: relLikes(obj1, obj2)
+                  rel_likes: stockHandler.relLikes(obj1, obj2)
                 },
                 {
                   stock: obj2.stock,
                   price: obj2.price,
-                  rel_likes: relLikes(obj2, obj1)
+                  rel_likes: stockHandler.relLikes(obj2, obj1)
                 }
               ]
               
@@ -134,12 +110,12 @@ module.exports = function (app,db) {
                 {
                   stock: obj1.stock,
                   price: obj1.price,
-                  rel_likes: relLikes(obj1, obj2)
+                  rel_likes: stockHandler.relLikes(obj1, obj2)
                 },
                 {
                   stock: obj2.stock,
                   price: obj2.price,
-                  rel_likes: relLikes(obj2, obj1)
+                  rel_likes: stockHandler.relLikes(obj2, obj1)
                 }
               ]
               
