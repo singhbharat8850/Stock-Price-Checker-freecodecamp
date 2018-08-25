@@ -16,8 +16,6 @@ module.exports = function (app,db) {
   
   var stockHandler = new StockHandler();
   
-  console.log(stockHandler.stock('goog'));
-  
   app.route('/api/stock-prices')
     .get(function (req, res){
       let stock = req.query.stock;
@@ -30,33 +28,15 @@ module.exports = function (app,db) {
       if(!Array.isArray(stock)){
         stock = (req.query.stock).toUpperCase();
       }
+    
       
-      // check if stock is saved in database. If save under IP document then it already added as a like
-    
-      async function findLike(stock){
-        let response = await db.collection(ip).findOne({name:stock});
-        return response;
-      }
-    
-      // save liked stock to IP documet
-    
-      async function saveLike(stock){
-        let response = await db.collection(ip).insertOne({name: stock});
-        return response;
-      }
-    
-      // difference between likes in two stocks 
-    
-      function relLikes(obj1, obj2){
-        return obj1.likes - obj2.likes;
-      }
     
       // check database and return stock object with likes number
     
       async function stockObj(stock){
         let stkObj = await stockHandler.fetchStock(stock);
         if(stkObj){
-          let data = await findLike(stock);
+          let data = await stockHandler.findLike(stock,db,ip);
             if(data){
               return {
                 stock: stkObj.stock,
@@ -81,7 +61,7 @@ module.exports = function (app,db) {
           return obj;
         }
         if(obj.likes === 0){
-          saveLike(obj.stock).then((data) => {
+          stockHandler.saveLike(obj.stock,db,ip).then((data) => {
             if(data.insertedCount === 1){
               obj.likes = 1;
               return obj;

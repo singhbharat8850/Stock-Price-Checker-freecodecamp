@@ -15,10 +15,25 @@ function StockHandler(){
     }
   };
   
-  this.stock = function(stock){
-    return stock;
+  // check if stock is saved in database. If save under IP document then it already added as a like
+    
+  this.findLike = async function(stock,db,ip){
+    let response = await db.collection(ip).findOne({name:stock});
+    return response;
   }
   
+  // save liked stock to IP documet
+    
+  this.saveLike = async function(stock,db,ip){
+    let response = await db.collection(ip).insertOne({name: stock});
+    return response;
+  }
+  
+  // difference between likes in two stocks 
+    
+  this.relLikes = function(obj1, obj2){
+    return obj1.likes - obj2.likes;
+  }
 }
 
 // grab symbol and price from third party api
