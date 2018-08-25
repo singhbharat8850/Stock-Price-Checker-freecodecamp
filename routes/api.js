@@ -9,7 +9,7 @@
 'use strict';
 
 var expect     = require('chai').expect;
-var fetchStock = require('../controllers/stockHandler');
+var StockHandler = require('../controllers/stockHandler');
 
 module.exports = function (app,db) {
 
@@ -48,7 +48,7 @@ module.exports = function (app,db) {
       // check database and return stock object with likes number
     
       async function stockObj(stock){
-        let stkObj = await fetchStock(stock);
+        let stkObj = await StockHandler.fetchStock(stock);
         if(stkObj){
           let data = await findLike(stock);
             if(data){
