@@ -20,6 +20,7 @@ function StockHandler(){
   this.findLike = async function(stock,db,ip){
     let response = await db.collection(ip).findOne({name:stock});
     return response;
+    
   }
   
   // save liked stock to IP documet
