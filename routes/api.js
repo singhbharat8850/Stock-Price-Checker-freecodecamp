@@ -35,14 +35,17 @@ module.exports = function (app,db) {
       let like  = req.query.like || false;
       let ip    = req.ip
       
+      // Convert single stock to uppercase
+      
       if(!Array.isArray(stock)){
         stock = (req.query.stock).toUpperCase();
       }
       
+      // check if stock is saved in database. If save under IP documents then it already added as a like
+    
       async function findLike(stock){
         let response = await db.collection(ip).findOne({name:stock});
         return response;
-        console.log(response);
       }
     
       async function saveLike(stock){
@@ -55,19 +58,19 @@ module.exports = function (app,db) {
       }
     
       async function stockObj(stock){
-        let stk = await fetchStock(stock);
-        if(stk){
+        let stkObj = await fetchStock(stock);
+        if(stkObj){
           let data = await findLike(stock);
             if(data){
               return {
-                stock: stk.stock,
-                price: stk.price,
+                stock: stkObj.stock,
+                price: stkObj.price,
                 likes: 1
               }
             } else {
               return {
-                stock: stk.stock,
-                price: stk.price,
+                stock: stkObj.stock,
+                price: stkObj.price,
                 likes: 0
               }
             }
@@ -75,13 +78,12 @@ module.exports = function (app,db) {
       }
     
       async function findAndUpdate(stock){
-        
-        let obj = await stockObj(stock)
+        let obj = await stockObj(stock);
         if(obj.likes === 1){
           return obj;
         }
         if(obj.likes === 0){
-          saveLike(stock.stock).then((data) => {
+          saveLike(obj.stock).then((data) => {
             if(data.insertedCount === 1){
               obj.likes = 1;
               return obj;
